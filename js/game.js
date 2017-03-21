@@ -2,6 +2,9 @@ var cpu;
 var body = document.getElementsByTagName("body")[0];
 var score = 0;
 var effectiveCpuModelNumber;
+var curCpuCache;
+var curCpuClockSpeed;
+var curCpuModelNumber;
 var nextCPUCache = curCpuCache * 2;
 var nextCPUClock = curCpuClockSpeed + .25;
 var nextCPUModel = curCpuModelNumber + 100;
@@ -10,20 +13,23 @@ var curCPU;
 
 //CPU Price Algorithim
 // Cache * ClockSpeed + Modelnumber
-var CPUPrice = "Buy CPU! Price: " + (curCpu.Cache * curCpu.ClockSpeed) + curCpu.ModelNumber; 
-
+var CPUPrice = "Buy CPU! Price: " + (curCPU.Cache * curCPU.ClockSpeed) + curCPU.ModelNumber; 
+var CPUPriceNonString = (curCPU.Cache * curCPU.ClockSpeed) + curCPU.ModelNumber;
+var CantBuyError = "You can't buy this yet!";
 
 
 
 // Score algorithim 
 // Score = (Cache)(ClockSpeed)(EffectiveCpuModelNumber)
-var StarterCPU = new CPUConstructor(16, 2.5, 3300);
-curCpu = StarterCPU;
-curCpuCache = StarterCPU.Cache;
-curCpuClockSpeed = StarterCPU.ClockSpeed;
-curCpuModelNumber = StarterCPU.ModelNumber;
+var StarerCPU = function(){
+  var SCPU = new CPUConstructor(16, 2.5, 3300);
+  curCPU = SCPU;
+  curCpuCache = StarterCPU.Cache;
+  curCpuClockSpeed = StarterCPU.ClockSpeed;
+  curCpuModelNumber = StarterCPU.ModelNumber;
+};
 
-effectiveCpuModelNumber = curCpu.ModelNumber / 10000;
+effectiveCpuModelNumber = curCPU.ModelNumber / 10000;
 
 var ShowStarterCPU = document.createElement("IMG");
 ShowStarterCPU.src = ('js/assets/cpu.png');
@@ -48,12 +54,22 @@ setInterval(function(){
 var BuyCPU = document.createElement("button");
 BuyCPU.innerHTML = CPUPrice;
 BuyCPU.onclick = function(){
-  if({
-  ACPU = new CPUConstructor(nextCPUCache, nextCPUClock, nextCPUModel);
-  curCpu = ACPU;
+  if(score > CPUPrceNonString){
+  var ACPU = new CPUConstructor(nextCPUCache, nextCPUClock, nextCPUModel);
+  curCPU = ACPU;
   score = score - CPUPrice;
+  console.log("CPU effectively bought!");
+  }
+  else{
+    alert(CantBuyError);
   }
 };
+
+
+// Write the cpu/s function
+setInterval(function(){
+  score = score + cpusPerSecond;
+}, 1000);
 
 
 
@@ -64,7 +80,6 @@ setInterval(function(){
   body.appendChild(WriteScore);
 }, 1000);
 
-//Write the CPUs / s
 
 
 
